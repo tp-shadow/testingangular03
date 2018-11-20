@@ -3,25 +3,29 @@ kind: Service
 metadata:
   name: frontend
   labels:
-    run: frontend
+    app: frontend
+    tier: frontend
 spec:
   type: LoadBalancer
   ports:
   - port: 4200
     targetPort: http-server
   selector:
-    run: frontend
+    app: frontend
+    tier: frontend
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: frontend
+  labels:
+    app: frontend
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        run: frontend
+        app: frontend
+        tier: frontend
     spec:
       containers:
       - name: frontend
