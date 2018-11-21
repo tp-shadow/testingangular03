@@ -1,10 +1,18 @@
-FROM node:latest
+FROM gcr.io/google_appengine/nodejs
 
-RUN mkdir -p /usr/src/app
+RUN /usr/local/bin/install_node '>=8.12.0'
 WORKDIR /usr/src/app
 
-COPY . /usr/src/app
-RUN npm install -g @angular/cli
-RUN npm install
+COPY . /app/
+
+RUN npm install -g @angular/cli --unsafe-perm || \
+  ((if [ -f npm-debug.log ]; then \
+      cat npm-debug.log; \
+    fi) && false)
+
+RUN npm install --unsafe-perm || \
+  ((if [ -f npm-debug.log ]; then \
+      cat npm-debug.log; \
+    fi) && false)
 
 CMD ng serve --host 0.0.0.0
